@@ -22,12 +22,15 @@ public class Dates {
         Boolean exit = false;
 
         while(exit == false){
+            //prompts the user to choose a function
             System.out.println("What would you like to do?\n    1. Find out how old you are to the day\n    2. Find out how long until your anniversary \n    3. Compare two dates \n    4. End the program (you may also enter any other number to exit)");
             Scanner input = new Scanner(System.in);
+
             int userInput = input.nextInt();
 
             switch(userInput){
                 case 1:
+                    //prompts user to enter a day, month, and year to calculate how old they are based on their birth date
                     System.out.println("Enter in the following data in order: The day, month, and year of your birth:");
                     int birthDay = input.nextInt();
                     int birthMonth = input.nextInt();
@@ -36,6 +39,7 @@ public class Dates {
                     dates.calculateBirthday(new CustomDate(birthDay, birthMonth, birthYear, 0, 0, 0));
                     break;
                 case 2:
+                    //prompts user to enter a day, month, and year to calculate the next occurring day of a given date
                     System.out.println("Enter in the following data in order: The day, month, and year of your anniversary");
                     int annDay = input.nextInt();
                     int annMonth = input.nextInt();
@@ -44,6 +48,7 @@ public class Dates {
                     dates.calculateAnniversary(new CustomDate(annDay, annMonth, annYear, 0, 0, 0));
                     break;
                 case 3:
+                    //prompts user to enter two dates and compares them
                     System.out.println("Enter in the following data in order: The day, month, and year of the first date");
                     int day1 = input.nextInt();
                     int month1 = input.nextInt();
@@ -55,6 +60,7 @@ public class Dates {
 
                     dates.compareDates(new CustomDate(day1, month1, year1, 0, 0, 0), new CustomDate(day2, month2, year2, 0, 0, 0));
                     break;
+                //any other input defaults to ending the program
                 default:
                     System.out.println("Program has ended");
                     exit = true;

@@ -30,6 +30,7 @@ public class CustomDate {
         updateCurrentDate();
     }
 
+    //sets this date to the current date
     private void setToCurrentDate(){
         day = currentDay;
         month = currentMonth;
@@ -41,42 +42,56 @@ public class CustomDate {
         updateCurrentDate();
     }
 
+    //updates the "current date and time" values to the actual current date
     private void updateCurrentDate(){
         SimpleDateFormat _currentDate = new SimpleDateFormat("dd-mm-yyyy");
         StringBuffer _currentDateString = new StringBuffer(String.valueOf(_currentDate.get2DigitYearStart()));
 
+        //create currentDay
         _currentDateString.delete(0, 8);
         currentDay = Integer.parseInt(String.valueOf(_currentDateString.delete(2, 30)));
 
+        //reset
         _currentDateString.delete(0, 30);
         _currentDateString.append(String.valueOf(_currentDate.get2DigitYearStart()));
 
+        //create currentYear
         currentYear = Integer.parseInt(String.valueOf(_currentDateString.delete(0, 24)));
 
+        //reset
         _currentDateString.delete(0, 30);
         _currentDateString.append(String.valueOf(_currentDate.get2DigitYearStart()));
 
+        //create currentHour
         _currentDateString.delete(0, 11);
         currentHour = Integer.parseInt(String.valueOf(_currentDateString.delete(2,30)));
 
+        //reset
         _currentDateString.delete(0, 30);
         _currentDateString.append(String.valueOf(_currentDate.get2DigitYearStart()));
 
+        //create currentMinute
         _currentDateString.delete(0, 14);
         currentMinute = Integer.parseInt(String.valueOf(_currentDateString.delete(2,30)));
 
+        //reset
         _currentDateString.delete(0, 30);
         _currentDateString.append(String.valueOf(_currentDate.get2DigitYearStart()));
 
+        //create currentSecond
         _currentDateString.delete(0, 17);
         currentSecond = Integer.parseInt(String.valueOf(_currentDateString.delete(2,30)));
 
+        //reset
         _currentDateString.delete(0, 30);
         _currentDateString.append(String.valueOf(_currentDate.get2DigitYearStart()));
 
+        //create currentMonthString
+        //this is done since simpleDateFormat is returning abbreviations instead of numbers
         _currentDateString.delete(0, 4);
         currentMonthString = String.valueOf(_currentDateString.delete(3, 30));
 
+        //sets currentMonth(int) based on currentMonthString
         if (currentMonthString.equals("Jan")) {
             currentMonth = 1;
 
@@ -116,6 +131,8 @@ public class CustomDate {
     }
 
     private void findMonthString(){
+        //gets an abbreviation of the month based on the integer of the current month
+        //this is used when a date is given and is not defaulted to the current date and time
         switch(month){
             case 1:
                 monthString = "Jan";
@@ -157,6 +174,8 @@ public class CustomDate {
     }
 
     public CustomDate compareDate(CustomDate date){
+
+        //finds the difference between all values
         int dayDifference = Math.abs(this.day - date.day),
             monthDifference = Math.abs(this.month - date.month),
             yearDifference = Math.abs(this.year - date.year) - 1,
@@ -164,34 +183,42 @@ public class CustomDate {
             minuteDifference = Math.abs(this.minute - date.minute),
             hourDifference = Math.abs(this.hour - date.hour);
 
+        //accounts for when a day goes above the current months day limit
+        //if the month is February
         if( month == 2){
             monthDifference++;
+            //if it is a leap year
             if(dayDifference > 29 && yearDifference % 4 == 0){
                 dayDifference -= 29;
                 dayDifference *= -1;
             }
+            //if it is not a leap year
             else if(dayDifference > 28 && yearDifference % 4 != 0){
                 dayDifference -= 28;
                 dayDifference *= -1;
             }
         }
+        //if the month is an even month
         else if(dayDifference > 30 && month % 2 == 0){
             monthDifference++;
             dayDifference -= 31;
             dayDifference *= -1;
         }
+        //if the month is an odd month
         else if(dayDifference > 31 && month % 2 != 0){
             monthDifference++;
             dayDifference -= 30;
             dayDifference *= -1;
         }
 
+        //accounts for when the month goes above 12
         if(monthDifference > 12){
             monthDifference -= 12;
             monthDifference *= -1;
             yearDifference++;
         }
 
+        //if a year goes below 0 (if the first date is larger than the second date)
         if(yearDifference < 0)
             yearDifference *= -1;
 
@@ -200,30 +227,41 @@ public class CustomDate {
 
     public CustomDate findNextOccurringDate(CustomDate date){
         CustomDate newDate;
+
+        //accounts for when the day goes above its month limit
+        //if the month is February
         if(date.day > currentDay && currentMonth == 2){
+            //if it is a leap year
             if(currentYear % 4 == 0)
                 date.day += 29;
+            //if it is not a leap year
             else
                 date.day += 28;
         }
 
+        //if it is an even month
         else if(date.day > currentDay && currentMonth % 2 == 0)
             date.day += 30;
+        //if it is an odd month
         else if(date.day > currentDay && currentMonth % 2 != 0)
             date.day += 31;
 
+        //accounts for when the month goes above 12
         if(date.month < currentMonth)
             date.month += 12;
 
+        //if "date" is before "this"
         if(date.before(this)){
             newDate = new CustomDate(date.day, date.month, currentYear + 1, 0, 0, 0);
         }
+        //if the "date" is after "this"
         else
             newDate = new CustomDate(Math.abs(date.day - currentDay), Math.abs(date.month - currentMonth), currentYear - 1, 0, 0, 0);
 
         return newDate.compareDate(getCurrentDate());
     }
 
+    //checks to see if a given date is before this date
     public Boolean before(CustomDate date){
         Boolean _before = false;
 
@@ -237,6 +275,7 @@ public class CustomDate {
         return _before;
     }
 
+    //getters
     public int getDay(){
         return day;
     }
